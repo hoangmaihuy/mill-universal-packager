@@ -45,7 +45,7 @@ jobs:
   publish:
     name: Publish to Maven Central
     needs: [build]
-    if: github.repository == 'hoangmaihuy/mill-scala-tsi' && github.ref == 'refs/heads/main'
+    if: github.repository == 'hoangmaihuy/mill-universal-packager' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     concurrency: publish-{{ github.sha }}
 
