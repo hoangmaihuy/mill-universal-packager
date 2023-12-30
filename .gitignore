@@ -7,4 +7,6 @@ hs_err_pid*
 .idea
 .vscode
 .bsp
+.bloop
+.metals
 out
