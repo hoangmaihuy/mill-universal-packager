@@ -60,6 +60,7 @@ object itest extends MillIntegrationTestModule {
 
   override def testInvocations = Seq(
     PathRef(testBase / "example") -> Seq(
+      TestInvocation.Targets(Seq("stage")),
       TestInvocation.Targets(Seq("universalPackage"))
     )
   )
