@@ -22,4 +22,6 @@ object example extends RootModule with ScalaModule with JavaAppPackagingModule {
     ivy"dev.zio::zio:2.0.19"
   )
 
+  override def topLevelDirectory = T { Some("example-app") }
+
 }

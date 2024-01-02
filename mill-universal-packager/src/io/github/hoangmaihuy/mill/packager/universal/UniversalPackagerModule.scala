@@ -23,19 +23,28 @@ trait UniversalPackagerModule extends PackagerModule {
     }
   }
 
+  /** Create an zip package file. The task will run universalStage() first, and then zip the stage output directory as
+    * the result.
+    */
   def universalPackage: T[PathRef] = T {
+    val stagePath = universalStage().path
+    val m2 = os.walk(stagePath).map { case p =>
+      val targetSubPath = p.relativeTo(stagePath).asSubPath
+      topLevelDirectory() match {
+        case None      => p -> targetSubPath
+        case Some(dir) => p -> os.sub / dir / targetSubPath
+      }
+    }
     val zip = T.dest / (packageName() + ".zip")
-    val mappings = universalMappings()
-    // add top level directory if defined
-    val m2 = topLevelDirectory().map { dir =>
-      mappings.map { case (f, p) => f -> (os.sub / dir / p) }
-    } getOrElse (mappings)
     ZipHelper.zip(m2, zip)
     PathRef(zip)
   }
 
-  // Create a local directory with all the files laid out as they would be in the final distribution
-  def stage: T[PathRef] = T {
+  /** Create a local directory with all the files laid out as they would be in the final distribution.
+    *
+    * Note: the output "stage" directory should always have no top level directory.
+    */
+  def universalStage: T[PathRef] = T {
     universalMappings().foreach { case (f, p) =>
       os.copy(
         from = f,

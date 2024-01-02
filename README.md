@@ -17,13 +17,13 @@ object example extends JavaAppPackagingModule {
 }
 ```
 
-Run `stage` command
+Run `universalStage` command
 
 ```bash
-> mill example.stage
+> mill example.universalStage
 ```
 
-The output directory can be found at `stage.dest` in Mill's `out` folder.
+The output directory can be found at `universalStage.dest` in Mill's `out` folder.
 
 Run `universalPackage` command
 
