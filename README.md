@@ -2,7 +2,7 @@
 
 Universal packaging for Java application, ported from [sbt-native-packager](https://github.com/sbt/sbt-native-packager).
 
-Currently, `mill-universal-packager` only supports universal `zip` archive with Bash start script.
+Currently, `mill-universal-packager` only supports universal `stage` with Bash start script and the corresponding `zip` archive.
 
 ## Usage
 
@@ -16,6 +16,14 @@ object example extends JavaAppPackagingModule {
 	override def packageVersion = "0.1.0"
 }
 ```
+
+Run `universalStage` command
+
+```bash
+> mill example.universalStage
+```
+
+The output directory can be found at `universalStage.dest` in Mill's `out` folder.
 
 Run `universalPackage` command
 

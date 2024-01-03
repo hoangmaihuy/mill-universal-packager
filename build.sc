@@ -48,6 +48,7 @@ object `mill-universal-packager` extends ScalaModule with CiReleaseModule {
   override def compileIvyDeps = super.compileIvyDeps() ++ Agg(
     ivy"com.lihaoyi::mill-scalalib:${millVersion()}"
   )
+
 }
 
 object itest extends MillIntegrationTestModule {
@@ -60,6 +61,7 @@ object itest extends MillIntegrationTestModule {
 
   override def testInvocations = Seq(
     PathRef(testBase / "example") -> Seq(
+      TestInvocation.Targets(Seq("universalStage")),
       TestInvocation.Targets(Seq("universalPackage"))
     )
   )
