@@ -62,7 +62,17 @@ object itest extends MillIntegrationTestModule {
   override def testInvocations = Seq(
     PathRef(testBase / "example") -> Seq(
       TestInvocation.Targets(Seq("universalStage")),
-      TestInvocation.Targets(Seq("universalPackage"))
+      TestInvocation.Targets(Seq("universalPackage")),
+      TestInvocation.Targets(Seq("universalPackageZip")),
+      TestInvocation.Targets(Seq("universalPackageTarZstd")),
+      TestInvocation.Targets(Seq("universalPackageTarGzip")),
+      TestInvocation.Targets(Seq("universalPackageTarBzip2")),
+      TestInvocation.Targets(Seq("universalPackageTarXz")),
+      TestInvocation.Targets(Seq("universalStagePackageZip")),
+      TestInvocation.Targets(Seq("universalStagePackageTarZstd")),
+      TestInvocation.Targets(Seq("universalStagePackageTarGzip")),
+      TestInvocation.Targets(Seq("universalStagePackageTarBzip2")),
+      TestInvocation.Targets(Seq("universalStagePackageTarXz"))
     )
   )
 
