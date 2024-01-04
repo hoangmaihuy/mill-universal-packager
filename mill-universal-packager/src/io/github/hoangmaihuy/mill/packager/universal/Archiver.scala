@@ -39,7 +39,6 @@ class Archiver(
   // for setting the excutable file permissions
   private val EXEXCUTABLE_FILE_PERMSET: PermSet = PermSet.fromString("rwxr-xr-x")
 
-  // val DEFAULT_FILE_MODE: Int = 0o100644
   /** make a compressed tarball file with the compression function from the given path, will put all contents under the
     * path to the tarball file. might throw exceptions when the input path is not existing, since we do not check if the
     * input path exists or not.
