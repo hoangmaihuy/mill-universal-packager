@@ -111,7 +111,7 @@ trait UniversalPackagerModule extends PackagerModule {
   def universalStagePackageTarZstd: T[PathRef] = T {
     val staged: PathRef = universalStage()
     val out: Path = T.dest / (packageName() + universalTarZstdExt())
-    TarArchives.mkTarball(staged.path, out, universalTopLevelPath())(
+    Archiver().mkTarball(staged.path, out, universalTopLevelPath())(
       new ZstdCompressorOutputStream(_, universalZstdCompressLevel())
     )
     T.log.info(s"Generated package: $out")
@@ -126,7 +126,7 @@ trait UniversalPackagerModule extends PackagerModule {
     val out: Path = T.dest / (packageName() + universalTarGZExt())
     val parameter = new GzipParameters()
     parameter.setCompressionLevel(universalGzipCompressLevel())
-    TarArchives.mkTarball(staged.path, out, universalTopLevelPath())(new GzipCompressorOutputStream(_, parameter))
+    Archiver().mkTarball(staged.path, out, universalTopLevelPath())(new GzipCompressorOutputStream(_, parameter))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
@@ -137,7 +137,7 @@ trait UniversalPackagerModule extends PackagerModule {
   def universalStagePackageTarBzip2: T[PathRef] = T {
     val staged: PathRef = universalStage()
     val out: Path = T.dest / (packageName() + universalTarBzip2Ext())
-    TarArchives.mkTarball(staged.path, out, universalTopLevelPath())(new BZip2CompressorOutputStream(_))
+    Archiver().mkTarball(staged.path, out, universalTopLevelPath())(new BZip2CompressorOutputStream(_))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
@@ -148,7 +148,7 @@ trait UniversalPackagerModule extends PackagerModule {
   def universalStagePackageTarXz: T[PathRef] = T {
     val staged: PathRef = universalStage()
     val out: Path = T.dest / (packageName() + universalTarXZExt())
-    TarArchives.mkTarball(staged.path, out, universalTopLevelPath())(new XZCompressorOutputStream(_))
+    Archiver().mkTarball(staged.path, out, universalTopLevelPath())(new XZCompressorOutputStream(_))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
@@ -166,7 +166,7 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarZstd: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarZstdExt())
-    TarArchives.mkTarball(universalMappings(), out, universalTopLevelPath())(
+    Archiver().mkTarball(universalMappings(), out, universalTopLevelPath())(
       new ZstdCompressorOutputStream(_, universalZstdCompressLevel())
     )
     T.log.info(s"Generated package: $out")
@@ -179,7 +179,7 @@ trait UniversalPackagerModule extends PackagerModule {
     val out: Path = T.dest / (packageName() + universalTarGZExt())
     val parameter = new GzipParameters()
     parameter.setCompressionLevel(universalGzipCompressLevel())
-    TarArchives.mkTarball(universalMappings(), out, universalTopLevelPath())(new GzipCompressorOutputStream(_, parameter))
+    Archiver().mkTarball(universalMappings(), out, universalTopLevelPath())(new GzipCompressorOutputStream(_, parameter))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
@@ -188,7 +188,7 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarBzip2: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarBzip2Ext())
-    TarArchives.mkTarball(universalMappings(), out, universalTopLevelPath())(new BZip2CompressorOutputStream(_))
+    Archiver().mkTarball(universalMappings(), out, universalTopLevelPath())(new BZip2CompressorOutputStream(_))
     PathRef(out)
   }
 
@@ -196,7 +196,7 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarXz: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarXZExt())
-    TarArchives.mkTarball(universalMappings(), out, universalTopLevelPath())(new XZCompressorOutputStream(_))
+    Archiver().mkTarball(universalMappings(), out, universalTopLevelPath())(new XZCompressorOutputStream(_))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
