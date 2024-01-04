@@ -17,7 +17,7 @@ object Archiver {
   def apply(
   )(
     implicit ctx: Ctx
-  ) = new Archiver()
+  ): Archiver = new Archiver()
 
 }
 
@@ -60,8 +60,10 @@ class Archiver(
   )(
     compress: OutputStream => CompressorOutputStream
   ): Unit = {
-    Using.resource(compress(new BufferedOutputStream(new FileOutputStream(output.toIO)))) { bos =>
-      addPathsToTarball(input, bos, wrappedIn)
+    Using.Manager { use =>
+      val fos = use(new FileOutputStream(output.toIO))
+      val bos = use(new BufferedOutputStream(fos))
+      addPathsToTarball(input, compress(bos), wrappedIn)
     }
   }
 
@@ -79,18 +81,17 @@ class Archiver(
     */
   def mkTarball(
     mappings: Seq[(Path, SubPath)],
-    out: Path,
+    output: Path,
     wrappedIn: Option[SubPath]
   )(
     compress: OutputStream => CompressorOutputStream
-  ): Unit = {
-    Using.resource(new TarArchiveOutputStream(compress(new BufferedOutputStream(new FileOutputStream(out.toIO))))) {
-      tos =>
-        mappings.foreach { case (from, to) =>
-          addPathToTar(from, to, tos, wrappedIn)
-        }
+  ): Unit =
+    Using.Manager { use =>
+      val fos = use(new FileOutputStream(output.toIO))
+      val bos = use(new BufferedOutputStream(fos))
+      val tos = use(new TarArchiveOutputStream(compress(bos)))
+      mappings.foreach { case (from, to) => addPathToTar(from, to, tos, wrappedIn) }
     }
-  }
 
   // recursively add a Path which can be a file or a directory to the given TarArchiveOutputStream.
   // if the path is a single file, just add it to the output stream,
