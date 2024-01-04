@@ -12,6 +12,8 @@ import os.{Path, PermSet, SubPath}
 import org.apache.commons.compress.archivers.tar.{TarArchiveEntry, TarArchiveOutputStream}
 import org.apache.commons.compress.compressors.CompressorOutputStream
 
+import io.github.hoangmaihuy.mill.packager.permissions.OctalString
+
 object Archiver {
 
   def apply(
@@ -36,8 +38,11 @@ class Archiver(
     */
   private val SOURCE_DATE_EPOCH: Option[Long] = ctx.env.get("SOURCE_DATE_EPOCH").flatMap(_.toLongOption)
 
-  // for setting the excutable file permissions
-  private val EXEXCUTABLE_FILE_PERMSET: PermSet = PermSet.fromString("rwxr-xr-x")
+  // for setting the permissions for normal files
+  private val DEAFULT_PERMSET: Int = oct"0644"
+
+  // for setting the permissions for directories and excutable files
+  private val EXEXCUTABLE_PERMSET: Int = oct"0755"
 
   /** make a compressed tarball file with the compression function from the given path, will put all contents under the
     * path to the tarball file. might throw exceptions when the input path is not existing, since we do not check if the
@@ -136,9 +141,14 @@ class Archiver(
       // set the last modified time as needed
       tarEntry.setLastModifiedTime(FileTime.from(d, TimeUnit.SECONDS))
     }
-    // set the executable permission for files under the /bin directory
-    if ((path / os.up).baseName == "bin") {
-      tarEntry.setMode(EXEXCUTABLE_FILE_PERMSET.value)
+    // set the executable permission for directires and files under the /bin directory
+    // the source file might have "0700" permissions, so adjust them to the pre set permissions
+    // TODO: or use (path / os.up).baseName == "bin" ?
+    if (file.canExecute || os.isDir(path)) {
+      tarEntry.setMode(EXEXCUTABLE_PERMSET)
+    } else {
+      // for normal files
+      tarEntry.setMode(DEAFULT_PERMSET)
     }
     // add tar ArchiveEntry
     tarArchive.putArchiveEntry(tarEntry)
