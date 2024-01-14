@@ -9,7 +9,6 @@ import io.github.hoangmaihuy.mill.packager.archetypes._
 
 object example extends RootModule with ScalaModule with JavaAppPackagingModule {
 
-
   override def artifactName = "example"
 
   override def scalaVersion = "3.3.1"
