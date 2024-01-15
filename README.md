@@ -33,6 +33,8 @@ Run `universalPackage` command
 
 Zip package will be saved at `universalPackage.dest` in Mill's `out` folder.
 
+For other package formats please see the "Tasks" section.
+
 ## Tasks
 
 | Task | Output destination | Description |
