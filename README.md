@@ -37,19 +37,19 @@ For other package formats please see the "Tasks" section.
 
 ## Tasks
 
-| Task | Output destination | Description |
-|------|-------------|--------------------------|
-| `universalStage` | universalStage.dest | For making unarchived universal package. This is usefull for checking the contents before the final packaging and publishing. |
-| `universalPackageZip` | universalPackageZip.dest | For making zip compressed universal package without `universalStage`. |
-| `universalPackageTarZstd` | universalPackageTarZstd.dest | For making zstd compressed tarball universal package without `universalStage`. The zstd compression level can be configured by `universalZstdCompressLevel`. And the tarball file name extension can be configured by `universalTarZstdExt` with default value `.tar.zstd`.  |
-| `universalPackageTarGzip` | universalPackageTarGzip.dest | For making gzip compressed tarball universal package, without `universalStage`. The gzip compression level can be configured by `universalGzipCompressLevel`. And the tarball file name extension can be configured by `universalTarGzipExt` with default value `.tar.gz`.  |
-| `universalPackageTarBzip2` | universalPackageTarBzip2.dest | For making bzip2 compressed tarball universal package, without `universalStage`. The tarball file name extension can be configured by `universalTarBzip2Ext` with default value `.tar.bz2`.  |
-| `universalPackageTarXz` | universalPackageTarXz.dest | For making xz compressed tarball universal package, without `universalStage`. The tarball file name extension can be configured by `universalTarXzExt` with default value `.tar.Xz`.  |
-| `universalPackageStageZip` | universalPackageStageZip.dest | For making zip compressed universal package from the `universalStage`. |
-| `universalPackageStageTarZstd` | universalPackageStageTarZstd.dest | For making zstd compressed tarball universal package from the `universalStage`. The zstd compression level can be configured by `universalZstdCompressLevel`. And the tarball file name extension can be configured by `universalTarZstdExt` with default value `.tar.zstd`.  |
-| `universalPackageStageTarGzip` | universalPackageStageTarGzip.dest | For making gzip compressed tarball universal package from the `universalStage`. The gzip compression level can be configured by `universalGzipCompressLevel`. And the tarball file name extension can be configured by `universalTarGzipExt` with default value `.tar.gz`.  |
+| Task                            | Output destination                 | Description              |
+|---------------------------------|------------------------------------|--------------------------|
+| `universalStage`                | universalStage.dest                | For making unarchived universal package. This is usefull for checking the contents before the final packaging and publishing. |
+| `universalPackageZip`           | universalPackageZip.dest           | For making zip compressed universal package without `universalStage`. |
+| `universalPackageTarZstd`       | universalPackageTarZstd.dest       | For making zstd compressed tarball universal package without `universalStage`. The zstd compression level can be configured by `universalZstdCompressLevel`. And the tarball file name extension can be configured by `universalTarZstdExt` with default value `.tar.zstd`.  |
+| `universalPackageTarGzip`       | universalPackageTarGzip.dest       | For making gzip compressed tarball universal package, without `universalStage`. The gzip compression level can be configured by `universalGzipCompressLevel`. And the tarball file name extension can be configured by `universalTarGzipExt` with default value `.tar.gz`.  |
+| `universalPackageTarBzip2`      | universalPackageTarBzip2.dest      | For making bzip2 compressed tarball universal package, without `universalStage`. The tarball file name extension can be configured by `universalTarBzip2Ext` with default value `.tar.bz2`.  |
+| `universalPackageTarXz`         | universalPackageTarXz.dest         | For making xz compressed tarball universal package, without `universalStage`. The tarball file name extension can be configured by `universalTarXzExt` with default value `.tar.Xz`.  |
+| `universalPackageStageZip`      | universalPackageStageZip.dest      | For making zip compressed universal package from the `universalStage`. |
+| `universalPackageStageTarZstd`  | universalPackageStageTarZstd.dest  | For making zstd compressed tarball universal package from the `universalStage`. The zstd compression level can be configured by `universalZstdCompressLevel`. And the tarball file name extension can be configured by `universalTarZstdExt` with default value `.tar.zstd`.  |
+| `universalPackageStageTarGzip`  | universalPackageStageTarGzip.dest  | For making gzip compressed tarball universal package from the `universalStage`. The gzip compression level can be configured by `universalGzipCompressLevel`. And the tarball file name extension can be configured by `universalTarGzipExt` with default value `.tar.gz`.  |
 | `universalPackageStageTarBzip2` | universalPackageStageTarBzip2.dest | For making bzip2 compressed tarball universal package from the `universalStage`. The tarball file name extension can be configured by `universalTarBzip2Ext` with default value `.tar.bz2`.  |
-| `universalPackageStageTarXz` | universalPackageStageTarXz.dest | For making xz compressed tarball universal package from the `universalStage`. The tarball file name extension can be configured by `universalTarXzExt` with default value `.tar.xz`.  |
+| `universalPackageStageTarXz`    | universalPackageStageTarXz.dest    | For making xz compressed tarball universal package from the `universalStage`. The tarball file name extension can be configured by `universalTarXzExt` with default value `.tar.xz`.  |
 
 ## Configuration
 
