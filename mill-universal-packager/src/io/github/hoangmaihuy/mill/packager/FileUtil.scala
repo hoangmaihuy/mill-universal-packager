@@ -6,16 +6,15 @@ import java.nio.file.attribute.{PosixFilePermission, PosixFilePermissions}
 
 import scala.util.Try
 
-/**
-  * Setting the file permissions
+/** Setting the file permissions
   */
 object chmod {
 
-  /**
-    * Using java 7 nio API to set the permissions.
+  /** Using java 7 nio API to set the permissions.
     *
     * @param file
-    * @param perms in octal format
+    * @param perms
+    *   in octal format
     */
   def apply(file: File, perms: String): Unit = {
     val posix = permissions(perms)
@@ -36,17 +35,17 @@ object chmod {
       sys.error("Error setting permissions " + perms + " on " + file.getAbsolutePath + ": " + e.getMessage)
     }
   }
+
 }
 
-/**
-  * Converts a octal unix permission representation into
-  * a java `PosiFilePermissions` compatible string.
+/** Converts a octal unix permission representation into a java `PosiFilePermissions` compatible string.
   */
 object permissions {
 
-  /**
-    * @param perms in octal format
-    * @return java 7 posix file permissions
+  /** @param perms
+    *   in octal format
+    * @return
+    *   java 7 posix file permissions
     */
   def apply(perms: String): java.util.Set[PosixFilePermission] =
     PosixFilePermissions fromString convert(perms)
