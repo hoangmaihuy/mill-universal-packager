@@ -5,6 +5,7 @@ import mill._
 import mill.scalalib._
 import mill.scalalib.publish._
 import mill.scalalib.api.ZincWorkerUtil.scalaNativeBinaryVersion
+import scalafmt._
 
 import de.tobiasroeser.mill.integrationtest._
 import io.kipp.mill.ci.release.CiReleaseModule
@@ -20,7 +21,7 @@ object Versions {
   lazy val scala = "2.13.12"
 }
 
-object `mill-universal-packager` extends ScalaModule with CiReleaseModule {
+object `mill-universal-packager` extends ScalaModule with CiReleaseModule with ScalafmtModule {
 
   override def scalaVersion = Versions.scala
 
@@ -62,7 +63,17 @@ object itest extends MillIntegrationTestModule {
   override def testInvocations = Seq(
     PathRef(testBase / "example") -> Seq(
       TestInvocation.Targets(Seq("universalStage")),
-      TestInvocation.Targets(Seq("universalPackage"))
+      TestInvocation.Targets(Seq("universalPackage")),
+      TestInvocation.Targets(Seq("universalPackageZip")),
+      TestInvocation.Targets(Seq("universalPackageTarZstd")),
+      TestInvocation.Targets(Seq("universalPackageTarGzip")),
+      TestInvocation.Targets(Seq("universalPackageTarBzip2")),
+      TestInvocation.Targets(Seq("universalPackageTarXz")),
+      TestInvocation.Targets(Seq("universalStagePackageZip")),
+      TestInvocation.Targets(Seq("universalStagePackageTarZstd")),
+      TestInvocation.Targets(Seq("universalStagePackageTarGzip")),
+      TestInvocation.Targets(Seq("universalStagePackageTarBzip2")),
+      TestInvocation.Targets(Seq("universalStagePackageTarXz"))
     )
   )
 
