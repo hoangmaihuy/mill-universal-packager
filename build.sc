@@ -5,6 +5,7 @@ import mill._
 import mill.scalalib._
 import mill.scalalib.publish._
 import mill.scalalib.api.ZincWorkerUtil.scalaNativeBinaryVersion
+import scalafmt._
 
 import de.tobiasroeser.mill.integrationtest._
 import io.kipp.mill.ci.release.CiReleaseModule
@@ -20,7 +21,7 @@ object Versions {
   lazy val scala = "2.13.12"
 }
 
-object `mill-universal-packager` extends ScalaModule with CiReleaseModule {
+object `mill-universal-packager` extends ScalaModule with CiReleaseModule with ScalafmtModule {
 
   override def scalaVersion = Versions.scala
 

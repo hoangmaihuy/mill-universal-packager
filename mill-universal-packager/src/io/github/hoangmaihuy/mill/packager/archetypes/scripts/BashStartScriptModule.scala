@@ -6,7 +6,7 @@ import mill._
 import io.github.hoangmaihuy.mill.packager.archetypes.{JavaAppPackagingModule, TemplateWriter}
 import io.github.hoangmaihuy.mill.packager._
 
-/** == Bash StartScript Plugin ==
+/** ==Bash StartScript Plugin==
   *
   * This plugins creates a start bash script to run an application built with the
   * [[io.github.hoangmaihuy.mill.packager.archetypes.JavaAppPackagingModule]].
@@ -86,9 +86,10 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
 
     /** Creates the block of defines for a script.
       *
-      * @param appClasspath A sequence of relative-locations (to the lib/ folder) of jars
-      *                     to include on the classpath.
-      * @param configFile An (optional) filename from which the script will read arguments.
+      * @param appClasspath
+      *   A sequence of relative-locations (to the lib/ folder) of jars to include on the classpath.
+      * @param configFile
+      *   An (optional) filename from which the script will read arguments.
       */
     def apply(appClasspath: Seq[String], configFile: Option[String], bundledJvm: Option[String]): Seq[String] =
       (configFile map configFileDefine).toSeq ++

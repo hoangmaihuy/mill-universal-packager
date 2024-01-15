@@ -30,7 +30,8 @@ trait CommonStartScriptGenerator {
   protected[this] val keySurround: String => String
 
   /** Set executable bit of the generated scripts to this value
-    * @todo Does it work when building archives on hosts that do not support such permission?
+    * @todo
+    *   Does it work when building archives on hosts that do not support such permission?
     */
   protected[this] val executableBitValue: Boolean
 
@@ -49,9 +50,8 @@ trait CommonStartScriptGenerator {
     def withScriptName(scriptName: String): SpecializedScriptConfig
   }
 
-  /** The type of specialized ScriptConfig.
-    * This enables callback methods of the concrete plugin implementations
-    * to use fields of config that only exist in their ScriptConfig specialization.
+  /** The type of specialized ScriptConfig. This enables callback methods of the concrete plugin implementations to use
+    * fields of config that only exist in their ScriptConfig specialization.
     */
   protected[this] type SpecializedScriptConfig <: ScriptConfig
 
@@ -129,10 +129,14 @@ trait CommonStartScriptGenerator {
   private[this] def mainScriptName(config: ScriptConfig): String =
     config.executableScriptName + scriptSuffix
 
-  /** @param mainClass - Main class added to the java command
-    * @param config - Config data for this script
-    * @param targetDir - Target directory for this script
-    * @return File pointing to the created main script
+  /** @param mainClass
+    *   \- Main class added to the java command
+    * @param config
+    *   \- Config data for this script
+    * @param targetDir
+    *   \- Target directory for this script
+    * @return
+    *   File pointing to the created main script
     */
   private[this] def createMainScript(
     mainClass: String,

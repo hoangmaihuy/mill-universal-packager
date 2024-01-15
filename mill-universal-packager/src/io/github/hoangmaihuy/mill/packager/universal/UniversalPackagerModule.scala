@@ -75,6 +75,8 @@ trait UniversalPackagerModule extends PackagerModule {
     * Note: the output "stage" directory should always have no top level directory.
     */
   def universalStage: T[PathRef] = T {
+    // let's clean the T.dest directory first
+    os.remove.all(T.dest)
     universalMappings().foreach { case (f, p) =>
       os.copy(
         from = f,

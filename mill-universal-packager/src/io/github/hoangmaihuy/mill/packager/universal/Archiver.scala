@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 import scala.util.Using
 
 import mill.api.Ctx
-import os.{Path, PermSet, SubPath}
+import os.{Path, SubPath}
 import org.apache.commons.compress.archivers.tar.{TarArchiveEntry, TarArchiveOutputStream}
 import org.apache.commons.compress.compressors.CompressorOutputStream
 
@@ -36,7 +36,7 @@ class Archiver(
   /** source data epoch, in seconds. should not use `sys.env`, as Mill's long-lived server process means that `sys.env`
     * variables may not be up to date.
     */
-  private val SOURCE_DATE_EPOCH: Option[Long] = ctx.env.get("SOURCE_DATE_EPOCH").flatMap(_.toLongOption)
+  private val SOURCE_DATE_EPOCH: Option[Long] = ctx.env.get("SOURCE_DATE_EPOCH").flatMap(_.toLongOption).filter(_ > 0L)
 
   // for setting the permissions for normal files
   private val DEAFULT_PERMSET: Int = oct"0644"
@@ -121,7 +121,7 @@ class Archiver(
             wrappedIn = wrappedIn
           )
         // this should not happen
-        case _ =>
+        case _ => throw new IllegalStateException(s"path $path is not directory nor file.")
       }
     }
   }
@@ -155,7 +155,7 @@ class Archiver(
     if (os.isFile(path)) {
       Using.resource(new BufferedInputStream(new FileInputStream(file))) { inputStream =>
         // Write file content to archive
-        copyInputStreamToOutputStream(inputStream, tarArchive)
+        transfer(inputStream, tarArchive, false)
       }
     }
     tarArchive.closeArchiveEntry()
@@ -165,15 +165,27 @@ class Archiver(
     *
     * TODO: use in.transferTo(out) once we drop JAVA 8 support.
     */
-  private def copyInputStreamToOutputStream(in: InputStream, out: OutputStream): Long = {
-    var nread = 0L
-    val buf = new Array[Byte](BUFFER_SIZE)
-    var n = 0
-    while ({ n = in.read(buf); n } > 0) {
-      out.write(buf, 0, n)
-      nread += n
+  private def transfer(in: InputStream, out: OutputStream, close: Boolean) = {
+    try {
+      val buffer = new Array[Byte](BUFFER_SIZE)
+
+      @scala.annotation.tailrec
+      def read(): Unit = {
+        val byteCount = in.read(buffer)
+        if (byteCount >= 0) {
+          out.write(
+            buffer,
+            0,
+            byteCount
+          )
+          read()
+        }
+      }
+
+      read()
+    } finally {
+      if (close) in.close()
     }
-    nread
   }
 
 }
