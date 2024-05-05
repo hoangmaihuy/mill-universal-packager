@@ -18,7 +18,7 @@ def millVersion = T {
 }
 
 object Versions {
-  lazy val scala = "2.13.13"
+  lazy val scala = "2.13.14"
 }
 
 object `mill-universal-packager` extends ScalaModule with CiReleaseModule with ScalafmtModule {
