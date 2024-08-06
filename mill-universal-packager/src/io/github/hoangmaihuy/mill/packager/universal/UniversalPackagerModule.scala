@@ -29,26 +29,21 @@ trait UniversalPackagerModule extends PackagerModule {
 
   def universalSources: T[PathRef] = T.source(millSourcePath / "universal")
 
-  def universalMappings: T[Seq[(os.Path, os.SubPath)]] = T {
+  def universalMappings: T[Seq[(PathRef, os.SubPath)]] = T {
     val sourceDirectory = universalSources().path
     if (os.exists(sourceDirectory)) {
       os
         .walk(sourceDirectory)
         .map { source =>
-          source -> source.subRelativeTo(sourceDirectory)
+          PathRef(source) -> source.subRelativeTo(sourceDirectory)
         }
     } else {
       Seq.empty
     }
   }
 
-  private def universalMappingSources = T.sources(
-    universalMappings().map(mapping => PathRef(mapping._1))
-  )
-
   // mappings with or without the configured topLevelDirectory
-  private def universalPackageMappings: T[Seq[(os.Path, os.SubPath)]] = T {
-    universalMappingSources()
+  private def universalPackageMappings: T[Seq[(PathRef, os.SubPath)]] = T {
     val mappings = universalMappings()
     topLevelDirectory().map { dir =>
       mappings.map { case (f, p) => f -> (os.sub / dir / p) }
@@ -84,7 +79,7 @@ trait UniversalPackagerModule extends PackagerModule {
     os.remove.all(T.dest)
     universalMappings().foreach { case (f, p) =>
       os.copy(
-        from = f,
+        from = f.path,
         to = Path(p, T.dest),
         createFolders = true,
         followLinks = true,
@@ -164,7 +159,7 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageZip: T[PathRef] = T {
     val zip = T.dest / (packageName() + ".zip")
-    ZipHelper.zip(universalPackageMappings(), zip)
+    ZipHelper.zip(universalPackageMappings().map(m => m._1.path -> m._2), zip)
     T.log.info(s"Generated package: $zip")
     PathRef(zip)
   }
@@ -173,7 +168,7 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarZstd: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarZstdExt())
-    Archiver().mkTarball(universalMappings(), out, universalTopLevelPath())(
+    Archiver().mkTarball(universalPackageMappings().map(m => m._1.path -> m._2), out, universalTopLevelPath())(
       new ZstdCompressorOutputStream(_, universalZstdCompressLevel())
     )
     T.log.info(s"Generated package: $out")
@@ -186,7 +181,7 @@ trait UniversalPackagerModule extends PackagerModule {
     val out: Path = T.dest / (packageName() + universalTarGZExt())
     val parameter = new GzipParameters()
     parameter.setCompressionLevel(universalGzipCompressLevel())
-    Archiver().mkTarball(universalMappings(), out, universalTopLevelPath())(new GzipCompressorOutputStream(_, parameter))
+    Archiver().mkTarball(universalPackageMappings().map(m => m._1.path -> m._2), out, universalTopLevelPath())(new GzipCompressorOutputStream(_, parameter))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
@@ -195,7 +190,7 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarBzip2: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarBzip2Ext())
-    Archiver().mkTarball(universalMappings(), out, universalTopLevelPath())(new BZip2CompressorOutputStream(_))
+    Archiver().mkTarball(universalPackageMappings().map(m => m._1.path -> m._2), out, universalTopLevelPath())(new BZip2CompressorOutputStream(_))
     PathRef(out)
   }
 
@@ -203,7 +198,7 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarXz: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarXZExt())
-    Archiver().mkTarball(universalMappings(), out, universalTopLevelPath())(new XZCompressorOutputStream(_))
+    Archiver().mkTarball(universalPackageMappings().map(m => m._1.path -> m._2), out, universalTopLevelPath())(new XZCompressorOutputStream(_))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
