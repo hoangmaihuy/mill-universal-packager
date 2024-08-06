@@ -3,8 +3,7 @@ package io.github.hoangmaihuy.mill.packager.archetypes.scripts
 import java.io.File
 import java.net.URL
 
-import mill.api.Logger
-
+import mill.api._
 import io.github.hoangmaihuy.mill.packager.archetypes.TemplateWriter
 
 trait CommonStartScriptGenerator {
@@ -61,7 +60,7 @@ trait CommonStartScriptGenerator {
     discoveredMainClasses: Seq[String],
     targetDir: os.Path,
     log: Logger
-  ): Seq[(os.Path, os.SubPath)] =
+  ): Seq[(PathRef, os.SubPath)] =
     StartScriptMainClassConfig.from(mainClass, discoveredMainClasses) match {
       case NoMain =>
         log.error("You have no main class in your project. No start script will be generated.")
@@ -103,7 +102,7 @@ trait CommonStartScriptGenerator {
     config: SpecializedScriptConfig,
     targetDir: os.Path,
     log: Logger
-  ): Seq[(os.Path, os.SubPath)] = {
+  ): Seq[(PathRef, os.SubPath)] = {
     val classAndScriptNames = ScriptUtils.createScriptNames(discoveredMainClasses)
     ScriptUtils.warnOnScriptNameCollision(classAndScriptNames, log)
 
@@ -143,7 +142,7 @@ trait CommonStartScriptGenerator {
     config: SpecializedScriptConfig,
     targetDir: os.Path,
     mainClasses: Seq[String]
-  ): (os.Path, os.SubPath) = {
+  ): (PathRef, os.SubPath) = {
     val template = resolveTemplate(config.templateLocation)
     val replacements = createReplacementsForMainScript(
       mainClass,
@@ -162,7 +161,7 @@ trait CommonStartScriptGenerator {
     os.write.over(script, scriptContent, createFolders = true)
     // TODO - Better control over this!
     script.toIO.setExecutable(executableBitValue)
-    script -> os.sub / scriptTargetFolder / scriptNameWithSuffix
+    PathRef(script) -> os.sub / scriptTargetFolder / scriptNameWithSuffix
   }
 
   private[this] def resolveTemplate(defaultTemplateLocation: File): URL = {
@@ -175,7 +174,7 @@ trait CommonStartScriptGenerator {
     targetDir: os.Path,
     config: ScriptConfig,
     log: Logger
-  ): Seq[(os.Path, os.SubPath)] = {
+  ): Seq[(PathRef, os.SubPath)] = {
     val tmp = targetDir / scriptTargetFolder
     val forwarderTemplate = getClass.getResource(s"/packager/scripts/$forwarderTemplateName")
     val classAndScriptNames = ScriptUtils.createScriptNames(discoveredMainClasses)
@@ -194,7 +193,7 @@ trait CommonStartScriptGenerator {
 
       os.write.over(file, scriptContent, createFolders = true)
       file.toIO.setExecutable(executableBitValue)
-      file -> os.sub / scriptTargetFolder / scriptName
+      PathRef(file) -> os.sub / scriptTargetFolder / scriptName
     }
   }
 

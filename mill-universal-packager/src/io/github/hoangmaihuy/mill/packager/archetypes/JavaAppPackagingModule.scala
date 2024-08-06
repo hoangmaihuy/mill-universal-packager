@@ -10,20 +10,20 @@ trait JavaAppPackagingModule extends UniversalPackagerModule with BashStartScrip
 
   def bundledJvmLocation: T[Option[String]] = T { Option.empty[String] }
 
-  private def moduleDepMappings: T[Seq[(os.Path, os.SubPath)]] = T.traverse(transitiveModuleDeps.distinct) { module =>
+  private def moduleDepMappings: T[Seq[(PathRef, os.SubPath)]] = T.traverse(transitiveModuleDeps.distinct) { module =>
     T.task {
-      module.jar().path -> os.sub / "lib" / (module.artifactName() + ".jar")
+      module.jar() -> os.sub / "lib" / (module.artifactName() + ".jar")
     }
   }
 
-  private def ivyDepMappings: T[Seq[(os.Path, os.SubPath)]] = T {
+  private def ivyDepMappings: T[Seq[(PathRef, os.SubPath)]] = T {
     resolvedRunIvyDeps().toSeq.map { ivyDep =>
-      ivyDep.path -> (os.sub / "lib" / ivyDep.path.last)
+      ivyDep -> (os.sub / "lib" / ivyDep.path.last)
     }
   }
 
   /** The order of the classpath used at runtime for the bat/bash scripts. */
-  def classpathMappings: T[Seq[(os.Path, os.SubPath)]] = T {
+  def classpathMappings: T[Seq[(PathRef, os.SubPath)]] = T {
     ivyDepMappings() ++ moduleDepMappings()
   }
 

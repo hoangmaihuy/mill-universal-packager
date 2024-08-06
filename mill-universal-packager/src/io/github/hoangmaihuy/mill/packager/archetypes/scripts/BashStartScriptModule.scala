@@ -59,7 +59,7 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
 
   def bashScriptEnvConfigLocation: T[Option[String]] = T { Option.empty[String] }
 
-  def bashScriptMappings: T[Seq[(os.Path, os.SubPath)]] = T {
+  def bashScriptMappings: T[Seq[(PathRef, os.SubPath)]] = T {
     val discoveredMainClasses = zincWorker().worker().discoverMainClasses(compile())
     generateStartScripts(
       BashScriptConfig(
