@@ -42,8 +42,13 @@ trait UniversalPackagerModule extends PackagerModule {
     }
   }
 
+  private def universalMappingSources = T.sources(
+    universalMappings().map(mapping => PathRef(mapping._1))
+  )
+
   // mappings with or without the configured topLevelDirectory
   private def universalPackageMappings: T[Seq[(os.Path, os.SubPath)]] = T {
+    universalMappingSources()
     val mappings = universalMappings()
     topLevelDirectory().map { dir =>
       mappings.map { case (f, p) => f -> (os.sub / dir / p) }
