@@ -168,7 +168,11 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarZstd: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarZstdExt())
-    Archiver().mkTarball(universalPackageMappings().map(m => m._1.path -> m._2), out, universalTopLevelPath())(
+    Archiver().mkTarball(
+      universalPackageMappings().map(m => m._1.path -> m._2),
+      out,
+      universalTopLevelPath()
+    )(
       new ZstdCompressorOutputStream(_, universalZstdCompressLevel())
     )
     T.log.info(s"Generated package: $out")
@@ -181,7 +185,11 @@ trait UniversalPackagerModule extends PackagerModule {
     val out: Path = T.dest / (packageName() + universalTarGZExt())
     val parameter = new GzipParameters()
     parameter.setCompressionLevel(universalGzipCompressLevel())
-    Archiver().mkTarball(universalPackageMappings().map(m => m._1.path -> m._2), out, universalTopLevelPath())(new GzipCompressorOutputStream(_, parameter))
+    Archiver().mkTarball(
+      universalPackageMappings().map(m => m._1.path -> m._2),
+      out,
+      universalTopLevelPath()
+    )(new GzipCompressorOutputStream(_, parameter))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
@@ -190,7 +198,11 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarBzip2: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarBzip2Ext())
-    Archiver().mkTarball(universalPackageMappings().map(m => m._1.path -> m._2), out, universalTopLevelPath())(new BZip2CompressorOutputStream(_))
+    Archiver().mkTarball(
+      universalPackageMappings().map(m => m._1.path -> m._2),
+      out,
+      universalTopLevelPath()
+    )(new BZip2CompressorOutputStream(_))
     PathRef(out)
   }
 
@@ -198,7 +210,11 @@ trait UniversalPackagerModule extends PackagerModule {
     */
   def universalPackageTarXz: T[PathRef] = T {
     val out: Path = T.dest / (packageName() + universalTarXZExt())
-    Archiver().mkTarball(universalPackageMappings().map(m => m._1.path -> m._2), out, universalTopLevelPath())(new XZCompressorOutputStream(_))
+    Archiver().mkTarball(
+      universalPackageMappings().map(m => m._1.path -> m._2),
+      out,
+      universalTopLevelPath()
+    )(new XZCompressorOutputStream(_))
     T.log.info(s"Generated package: $out")
     PathRef(out)
   }
