@@ -48,15 +48,15 @@ object permissions {
     *   java 7 posix file permissions
     */
   def apply(perms: String): java.util.Set[PosixFilePermission] =
-    PosixFilePermissions fromString convert(perms)
+    PosixFilePermissions `fromString` convert(perms)
 
   def convert(perms: String): String = {
     require(perms.length == 4 || perms.length == 3, s"Permissions must have 3 or 4 digits, got [$perms]")
     // ignore setuid/setguid/sticky bit
     val i = if (perms.length == 3) 0 else 1
-    val user = Character getNumericValue (perms charAt i)
-    val group = Character getNumericValue (perms charAt i + 1)
-    val other = Character getNumericValue (perms charAt i + 2)
+    val user = Character `getNumericValue` (perms `charAt` i)
+    val group = Character `getNumericValue` (perms `charAt` i + 1)
+    val other = Character `getNumericValue` (perms `charAt` i + 2)
 
     asString(user) + asString(group) + asString(other)
   }
@@ -75,7 +75,7 @@ object permissions {
 
   /** Enriches string with `oct` interpolator, parsing string as base 8 integer. */
   implicit class OctalString(val sc: StringContext) extends AnyVal {
-    def oct(args: Any*) = Integer.parseInt(sc.s(args: _*), 8)
+    def oct(args: Any*) = Integer.parseInt(sc.s(args*), 8)
   }
 
 }

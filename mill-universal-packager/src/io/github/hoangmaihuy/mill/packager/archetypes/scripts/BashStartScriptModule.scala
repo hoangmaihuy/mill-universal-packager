@@ -1,10 +1,10 @@
 package io.github.hoangmaihuy.mill.packager.archetypes.scripts
 
 import java.io.File
-import mill._
+import mill.*
 
 import io.github.hoangmaihuy.mill.packager.archetypes.{JavaAppPackagingModule, TemplateWriter}
-import io.github.hoangmaihuy.mill.packager._
+import io.github.hoangmaihuy.mill.packager.*
 
 /** ==Bash StartScript Plugin==
   *
@@ -19,16 +19,16 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
 
   /** Name of the bash forwarder template if user wants to provide custom one
     */
-  override protected[this] val forwarderTemplateName = "bash-forwarder-template"
+  override protected val forwarderTemplateName = "bash-forwarder-template"
 
   val appIniLocation = "${app_home}/../conf/application.ini"
 
-  override protected[this] val scriptSuffix: String = ""
-  override protected[this] val eol: String = "\n"
-  override protected[this] val keySurround: String => String = TemplateWriter.bashFriendlyKeySurround
-  override protected[this] val executableBitValue: Boolean = true
+  override protected val scriptSuffix: String = ""
+  override protected val eol: String = "\n"
+  override protected val keySurround: String => String = TemplateWriter.bashFriendlyKeySurround
+  override protected val executableBitValue: Boolean = true
 
-  protected[this] case class BashScriptConfig(
+  protected case class BashScriptConfig(
     override val executableScriptName: String,
     override val scriptClasspath: Seq[String],
     override val replacements: Seq[(String, String)],
@@ -37,15 +37,15 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
     override def withScriptName(scriptName: String): BashScriptConfig = copy(executableScriptName = scriptName)
   }
 
-  override protected[this] type SpecializedScriptConfig = BashScriptConfig
+  override protected type SpecializedScriptConfig = BashScriptConfig
 
-  def bashScriptTemplates = T.source(millSourcePath / "templates" / bashTemplate)
+  def bashScriptTemplates = Task.Source(moduleDir / "templates" / bashTemplate)
 
-  def bashScriptConfigLocation: T[Option[String]] = T { Some(appIniLocation) }
+  def bashScriptConfigLocation: T[Option[String]] = Task { Some(appIniLocation) }
 
-  def bashScriptExtraDefines: T[Seq[String]] = T { Seq.empty[String] }
+  def bashScriptExtraDefines: T[Seq[String]] = Task { Seq.empty[String] }
 
-  def bashScriptDefines: T[Seq[String]] = T {
+  def bashScriptDefines: T[Seq[String]] = Task {
     Defines(
       scriptClasspath(),
       bashScriptConfigLocation(),
@@ -53,14 +53,13 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
     ) ++ bashScriptExtraDefines()
   }
 
-  def bashScriptReplacements: T[Seq[(String, String)]] = T {
+  def bashScriptReplacements: T[Seq[(String, String)]] = Task {
     generateScriptReplacements(bashScriptDefines())
   }
 
-  def bashScriptEnvConfigLocation: T[Option[String]] = T { Option.empty[String] }
+  def bashScriptEnvConfigLocation: T[Option[String]] = Task { Option.empty[String] }
 
-  def bashScriptMappings: T[Seq[(PathRef, os.SubPath)]] = T {
-    val discoveredMainClasses = zincWorker().worker().discoverMainClasses(compile())
+  def bashScriptMappings: T[Seq[(PathRef, os.SubPath)]] = Task {
     generateStartScripts(
       BashScriptConfig(
         executableScriptName = executableScriptName(),
@@ -69,13 +68,13 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
         templateLocation = bashScriptTemplates().path.toIO
       ),
       mainClass(),
-      discoveredMainClasses,
-      T.dest,
-      T.log
+      allLocalMainClasses(),
+      Task.dest,
+      Task.log
     )
   }
 
-  private[this] def generateScriptReplacements(defines: Seq[String]): Seq[(String, String)] = {
+  private def generateScriptReplacements(defines: Seq[String]): Seq[(String, String)] = {
     val defineString = defines mkString "\n"
     Seq("template_declares" -> defineString)
   }
@@ -96,7 +95,7 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
         Seq(makeClasspathDefine(appClasspath)) ++
         (bundledJvm map bundledJvmDefine).toSeq
 
-    private[this] def makeClasspathDefine(cp: Seq[String]): String = {
+    private def makeClasspathDefine(cp: Seq[String]): String = {
       val fullString = cp map (n =>
         if (n.startsWith("/")) n
         else "$lib_dir/" + n
@@ -104,15 +103,15 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
       "declare -r app_classpath=\"" + fullString + "\"\n"
     }
 
-    private[this] def configFileDefine(configFile: String) =
+    private def configFileDefine(configFile: String) =
       "declare -r script_conf_file=\"%s\"" format configFile
 
-    private[this] def bundledJvmDefine(bundledJvm: String) =
+    private def bundledJvmDefine(bundledJvm: String) =
       """declare -r bundled_jvm="$(dirname "$app_home")/%s"""" format bundledJvm
 
   }
 
-  private[this] def usageMainClassReplacement(mainClasses: Seq[String]): String =
+  private def usageMainClassReplacement(mainClasses: Seq[String]): String =
     if (mainClasses.nonEmpty)
       mainClasses.mkString(
         "Available main classes:\n\t",
@@ -122,7 +121,7 @@ trait BashStartScriptModule extends Module with CommonStartScriptGenerator { sel
     else
       ""
 
-  override protected[this] def createReplacementsForMainScript(
+  override protected def createReplacementsForMainScript(
     mainClass: String,
     mainClasses: Seq[String],
     config: SpecializedScriptConfig

@@ -56,7 +56,7 @@ object TemplateWriter {
     sb.toString
   }
 
-  private[this] def replaceValues(
+  private def replaceValues(
     lines: Seq[String],
     replacements: Seq[(String, String)],
     keySurround: String => String
@@ -70,7 +70,7 @@ object TemplateWriter {
     keySurround: String => String = bashFriendlyKeySurround,
     charset: java.nio.charset.Charset = defaultCharset
   ): String = {
-    val lines = Source.fromURL(source)(Codec.apply(charset)).getLines().toSeq
+    val lines = Source.fromURL(source)(using Codec.apply(charset)).getLines().toSeq
     replaceValues(lines, replacements, eol, keySurround)
   }
 
