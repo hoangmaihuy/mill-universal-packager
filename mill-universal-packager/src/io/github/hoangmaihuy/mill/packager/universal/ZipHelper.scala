@@ -7,7 +7,7 @@ import java.util.zip.Deflater
 import scala.jdk.CollectionConverters._
 
 import org.apache.commons.compress.archivers.zip._
-import org.apache.commons.compress.utils.IOUtils
+import org.apache.commons.io.IOUtils
 
 /** Module with functions associated with processing zip files.
   *
@@ -101,7 +101,7 @@ object ZipHelper {
           }
           // Now check to see if we have permissions for this sucker.
           mode foreach (entry.setUnixMode)
-          output putArchiveEntry entry
+          output `putArchiveEntry` entry
 
           try
             if (file.isFile) {
@@ -120,7 +120,7 @@ object ZipHelper {
     */
   private def withZipOutput(file: File)(f: ZipArchiveOutputStream => Unit): Unit = {
     val zipOut = new ZipArchiveOutputStream(file)
-    zipOut setLevel Deflater.BEST_COMPRESSION
+    zipOut `setLevel` Deflater.BEST_COMPRESSION
     try f(zipOut)
     catch {
       case t: Throwable =>
@@ -153,7 +153,7 @@ object ZipHelper {
     *   http://stackoverflow.com/questions/9873845/java-7-zip-file-system-provider-doesnt-seem-to-accept-spaces-in-uri
     */
   def withZipFilesystem(zipFile: File, overwrite: Boolean = true)(f: FileSystem => Unit): Unit = {
-    if (overwrite) Files deleteIfExists zipFile.toPath
+    if (overwrite) Files `deleteIfExists` zipFile.toPath
     val env = Map("create" -> "true").asJava
     val uri = new URI("jar", zipFile.toPath.toUri().toString(), null)
 

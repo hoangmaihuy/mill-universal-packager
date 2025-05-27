@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 import scala.util.Using
 
-import mill.api.Ctx
+import mill.define.TaskCtx
 import os.{Path, SubPath}
 import org.apache.commons.compress.archivers.tar.{TarArchiveEntry, TarArchiveOutputStream}
 import org.apache.commons.compress.compressors.CompressorOutputStream
@@ -18,7 +18,7 @@ object Archiver {
 
   def apply(
   )(
-    implicit ctx: Ctx
+    implicit ctx: TaskCtx
   ): Archiver = new Archiver()
 
 }
@@ -27,7 +27,7 @@ object Archiver {
   */
 class Archiver(
 )(
-  implicit ctx: Ctx
+  implicit ctx: TaskCtx
 ) {
 
   // buffer size used for reading and writing
@@ -58,12 +58,12 @@ class Archiver(
     * @param compress
     *   the compression function
     */
-  def mkTarball(
+  def mkTarball[T <: OutputStream](
     input: Path,
     output: Path,
     wrappedIn: Option[SubPath]
   )(
-    compress: OutputStream => CompressorOutputStream
+    compress: OutputStream => CompressorOutputStream[T]
   ): Unit = {
     Using.Manager { use =>
       val fos = use(new FileOutputStream(output.toIO))
@@ -84,12 +84,12 @@ class Archiver(
     * @param compress
     *   the compression function
     */
-  def mkTarball(
+  def mkTarball[T <: OutputStream](
     mappings: Seq[(Path, SubPath)],
     output: Path,
     wrappedIn: Option[SubPath]
   )(
-    compress: OutputStream => CompressorOutputStream
+    compress: OutputStream => CompressorOutputStream[T]
   ): Unit =
     Using.Manager { use =>
       val fos = use(new FileOutputStream(output.toIO))
