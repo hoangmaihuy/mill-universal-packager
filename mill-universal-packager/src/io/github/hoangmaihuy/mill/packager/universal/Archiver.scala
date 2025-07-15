@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 import scala.util.Using
 
-import mill.define.TaskCtx
+import mill.api.TaskCtx
 import os.{Path, SubPath}
 import org.apache.commons.compress.archivers.tar.{TarArchiveEntry, TarArchiveOutputStream}
 import org.apache.commons.compress.compressors.CompressorOutputStream
