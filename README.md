@@ -7,8 +7,10 @@ Currently, `mill-universal-packager` only supports universal `stage` with Bash s
 ## Usage
 
 ```scala
-// build.sc
-import $ivy.`io.github.hoangmaihuy::mill-universal-packager::<latest-version>`
+// build.mill
+//| mvnDeps:
+//| - io.github.hoangmaihuy::mill-universal-packager::<latest-version>
+
 
 import io.github.hoangmaihuy.mill.packager.archetypes.JavaAppPackagingModule
 
