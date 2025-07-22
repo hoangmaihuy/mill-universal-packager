@@ -1,4 +1,3 @@
-//| mvnDeps: ["com.lihaoyi::mill-contrib-sonatypecentral:$MILL_VERSION"]
 import mill.*
 import mill.scalalib.*
 import mill.scalalib.publish.*
