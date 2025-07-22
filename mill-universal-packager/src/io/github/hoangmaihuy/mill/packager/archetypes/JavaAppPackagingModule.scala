@@ -4,7 +4,6 @@ import mill.*
 
 import io.github.hoangmaihuy.mill.packager.archetypes.scripts.BashStartScriptModule
 import io.github.hoangmaihuy.mill.packager.universal.UniversalPackagerModule
-import io.github.hoangmaihuy.mill.packager.*
 
 trait JavaAppPackagingModule extends UniversalPackagerModule with BashStartScriptModule {
 

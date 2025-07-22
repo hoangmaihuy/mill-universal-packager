@@ -4,7 +4,6 @@ import java.io.File
 import mill.*
 
 import io.github.hoangmaihuy.mill.packager.archetypes.{JavaAppPackagingModule, TemplateWriter}
-import io.github.hoangmaihuy.mill.packager.*
 
 /** ==Bash StartScript Plugin==
   *
