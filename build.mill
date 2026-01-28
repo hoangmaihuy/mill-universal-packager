@@ -5,7 +5,7 @@ import mill.util.VcsVersion
 import mill.util.BuildInfo.{millVersion, millBinPlatform}
 
 object Versions {
-  lazy val scala = "3.7.0"
+  lazy val scala = "3.7.4"
   lazy val commonCompress = "1.27.1"
   lazy val zstdJni = "1.5.7-3"
   lazy val xz = "1.10"

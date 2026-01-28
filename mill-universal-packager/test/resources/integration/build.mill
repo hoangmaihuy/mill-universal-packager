@@ -10,7 +10,7 @@ object example extends Module with ScalaModule with JavaAppPackagingModule {
 
   override def artifactName = "example"
 
-  override def scalaVersion = "3.7.0"
+  override def scalaVersion = "3.7.4"
 
   override def mainClass = Some("MainApp")
 
